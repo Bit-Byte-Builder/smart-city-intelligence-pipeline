@@ -21,6 +21,6 @@ lag3 = st.number_input("PM2.5 3 Hours Ago")
 if st.button("Predict"):
     features = np.array([[temp, pres, dewp, wspm, lag1, lag2, lag3]])
     
-    prediction = model.predict(features)
+    prediction = model.predict(features, validate_features=False)
     
     st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
