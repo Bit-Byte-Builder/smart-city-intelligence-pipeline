@@ -53,7 +53,8 @@ if st.button("Predict"):
     features['wd_NE'] = 1
 
     # Ensure correct column order (VERY IMPORTANT)
-    features = features.reindex(sorted(features.columns), axis=1)
+    feature_columns = pickle.load(open("models/feature_columns.pkl", "rb"))
+    features = features.reindex(columns=feature_columns, fill_value=0)
 
     # Step 5: Predict
     prediction = model.predict(features)
