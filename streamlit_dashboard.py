@@ -41,7 +41,7 @@ if st.button("Predict"):
 
     # Step 2: Define wd features
     wd_features = [
-        'wd_N','wd_NE','wd_ENE','wd_E','wd_ESE','wd_SE','wd_SSE',
+        'wd_N','wd_NNE','wd_NE','wd_ENE','wd_E','wd_ESE','wd_SE','wd_SSE',
         'wd_S','wd_SSW','wd_SW','wd_WSW','wd_W','wd_WNW','wd_NW','wd_NNW'
     ]
 
@@ -51,6 +51,9 @@ if st.button("Predict"):
 
     # Step 4: Set one direction
     features['wd_NE'] = 1
+
+    # Ensure correct column order (VERY IMPORTANT)
+    features = features.reindex(sorted(features.columns), axis=1)
 
     # Step 5: Predict
     prediction = model.predict(features)
