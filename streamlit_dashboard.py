@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 import pickle
 import numpy as np
 
@@ -19,7 +20,6 @@ lag2 = st.number_input("PM2.5 2 Hours Ago")
 lag3 = st.number_input("PM2.5 3 Hours Ago")
 
 if st.button("Predict"):
-    import pandas as pd
 
 features = pd.DataFrame([{
     'TEMP', 'PRES', 'DEWP', 'WSPM', 'PM2.5_lag1', 'PM2.5_lag2',
