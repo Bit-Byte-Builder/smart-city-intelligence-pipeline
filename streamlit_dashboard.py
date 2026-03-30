@@ -31,4 +31,4 @@ features = pd.DataFrame([{
     
 prediction = model.predict(features)
     
-    st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
+st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
