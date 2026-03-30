@@ -26,8 +26,9 @@ features = pd.DataFrame([{
        'PM2.5_lag3', 'PM2.5_rolling_mean_24h', 'PM2.5_rolling_std_24h', 'hour',
        'month', 'wd_E', 'wd_ENE', 'wd_ESE', 'wd_N', 'wd_NE', 'wd_NNE',
        'wd_NNW', 'wd_NW', 'wd_S', 'wd_SE', 'wd_SSE', 'wd_SSW', 'wd_SW', 'wd_W',
-       'wd_WNW', 'wd_WSW'}])
+       'wd_WNW', 'wd_WSW'
+}])
     
-    prediction = model.predict(features)
+prediction = model.predict(features)
     
     st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
