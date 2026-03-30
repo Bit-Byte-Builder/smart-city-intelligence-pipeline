@@ -19,8 +19,15 @@ lag2 = st.number_input("PM2.5 2 Hours Ago")
 lag3 = st.number_input("PM2.5 3 Hours Ago")
 
 if st.button("Predict"):
-    features = np.array([[temp, pres, dewp, wspm, lag1, lag2, lag3]])
+    import pandas as pd
+
+features = pd.DataFrame([{
+    'TEMP', 'PRES', 'DEWP', 'WSPM', 'PM2.5_lag1', 'PM2.5_lag2',
+       'PM2.5_lag3', 'PM2.5_rolling_mean_24h', 'PM2.5_rolling_std_24h', 'hour',
+       'month', 'wd_E', 'wd_ENE', 'wd_ESE', 'wd_N', 'wd_NE', 'wd_NNE',
+       'wd_NNW', 'wd_NW', 'wd_S', 'wd_SE', 'wd_SSE', 'wd_SSW', 'wd_SW', 'wd_W',
+       'wd_WNW', 'wd_WSW'}])
     
-    prediction = model.predict(features, validate_features=False)
+    prediction = model.predict(features)
     
     st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
