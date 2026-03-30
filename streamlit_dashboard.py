@@ -21,6 +21,7 @@ lag3 = st.number_input("PM2.5 3 Hours Ago")
 
 if st.button("Predict"):
 
+    # Step 1: Create features FIRST
     features = pd.DataFrame([{
         "TEMP": temp,
         "PRES": pres,
@@ -31,23 +32,28 @@ if st.button("Predict"):
         "PM2.5_lag2": lag2,
         "PM2.5_lag3": lag3,
 
-        "PM2.5_rolling_mean_24h": lag1,   # temporary approximation
-        "PM2.5_rolling_std_24h": 1,       # dummy value
+        "PM2.5_rolling_mean_24h": lag1,
+        "PM2.5_rolling_std_24h": 1,
 
         "hour": 12,
         "month": 3
     }])
 
-wd_features = [
-    'wd_N','wd_NE','wd_ENE','wd_E','wd_ESE','wd_SE','wd_SSE',
-    'wd_S','wd_SSW','wd_SW','wd_WSW','wd_W','wd_WNW','wd_NW','wd_NNW'
-]
+    # Step 2: Define wd features
+    wd_features = [
+        'wd_N','wd_NE','wd_ENE','wd_E','wd_ESE','wd_SE','wd_SSE',
+        'wd_S','wd_SSW','wd_SW','wd_WSW','wd_W','wd_WNW','wd_NW','wd_NNW'
+    ]
 
-for col in wd_features:
-    features[col] = 0
+    # Step 3: Add missing columns
+    for col in wd_features:
+        features[col] = 0
 
-features['wd_NE'] = 1  # default wind direction
-    
-prediction = model.predict(features)
+    # Step 4: Set one direction
+    features['wd_NE'] = 1
 
-st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
+    # Step 5: Predict
+    prediction = model.predict(features)
+
+    st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
+
