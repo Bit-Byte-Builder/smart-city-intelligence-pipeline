@@ -18,7 +18,7 @@ def set_background(color):
     """, unsafe_allow_html=True)
 
 # -------------------------------
-# 📍 Get User Location (IP-based)
+# 📍 IP-based Location (Fallback)
 # -------------------------------
 def get_location():
     try:
@@ -28,12 +28,32 @@ def get_location():
         return None, None, None
 
 # -------------------------------
-# 🌍 Get Real AQI (OpenWeather)
+# 🌍 City → Lat/Lon
+# -------------------------------
+def get_lat_lon_from_city(city, api_key):
+    try:
+        url = f"http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={api_key}"
+        data = requests.get(url).json()
+        return data[0]["lat"], data[0]["lon"]
+    except:
+        return None, None
+
+# -------------------------------
+# 🌫️ Get Real AQI
 # -------------------------------
 def get_real_aqi(lat, lon, api_key):
     try:
         url = f"http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={api_key}"
-        data = requests.get(url).json()
+        res = requests.get(url)
+
+        if res.status_code != 200:
+            return None
+
+        data = res.json()
+
+        if "list" not in data:
+            return None
+
         return data["list"][0]["components"]["pm2_5"]
     except:
         return None
@@ -45,25 +65,31 @@ model = pickle.load(open("models/pollution_model.pkl", "rb"))
 feature_columns = pickle.load(open("models/feature_columns.pkl", "rb"))
 
 # -------------------------------
+# 🔑 API KEY (replace later with st.secrets)
+# -------------------------------
+API_KEY = "YOUR_API_KEY_HERE"
+
+# -------------------------------
 # 🖥️ UI
 # -------------------------------
 st.title("🌆 Smart City Intelligence Platform")
 st.write("Air Pollution Prediction System")
 
 # -------------------------------
-# 🔑 API KEY (TEMP - replace later with secrets)
+# 🌍 Location Input
 # -------------------------------
-API_KEY = "YOUR_API_KEY_HERE"
+city_input = st.text_input("Enter City (Recommended)")
 
-# -------------------------------
-# 📍 Auto Location
-# -------------------------------
-lat, lon, city = get_location()
+if city_input:
+    lat, lon = get_lat_lon_from_city(city_input, API_KEY)
+    city = city_input
+else:
+    lat, lon, city = get_location()
 
 if lat and lon:
-    st.success(f"📍 Location detected: {city}")
+    st.success(f"📍 Location: {city}")
 else:
-    st.warning("⚠️ Could not detect location")
+    st.warning("⚠️ Could not determine location")
 
 # -------------------------------
 # 🧾 Inputs
@@ -88,7 +114,7 @@ wd = st.selectbox("Wind Direction", [
 if st.button("Predict"):
 
     try:
-        # Step 1: Create features
+        # Step 1: Feature creation
         features = pd.DataFrame([{
             "TEMP": temp,
             "PRES": pres,
@@ -117,7 +143,7 @@ if st.button("Predict"):
         # Step 3: Match training columns
         features = features.reindex(columns=feature_columns, fill_value=0)
 
-        # Step 4: Predict
+        # Step 4: Prediction
         prediction = model.predict(features)
         value = prediction[0]
 
@@ -175,4 +201,4 @@ if st.button("Predict"):
         st.plotly_chart(fig)
 
     except Exception as e:
-        st.error(f"Error: {str(e)}")
+        st.error(f"❌ Error: {str(e)}")
