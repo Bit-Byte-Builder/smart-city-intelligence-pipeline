@@ -78,30 +78,30 @@ if st.button("Predict"):
     features = features.reindex(columns=feature_columns, fill_value=0)
 
     # Step 5: Predict with error handling
-    try:
+try:
     prediction = model.predict(features)
     value = prediction[0]
 
     st.success(f"Predicted PM2.5: {value:.2f}")
 
     # AQI Label + Background
-if value <= 30:
-    set_background("#d4edda")   # light green
-    st.success("🟢 Air Quality: Good")
+    if value <= 30:
+        set_background("#d4edda")
+        st.success("🟢 Air Quality: Good")
 
-elif value <= 60:
-    set_background("#fff3cd")   # light yellow
-    st.warning("🟡 Air Quality: Moderate")
+    elif value <= 60:
+        set_background("#fff3cd")
+        st.warning("🟡 Air Quality: Moderate")
 
-elif value <= 90:
-    set_background("#ffe5b4")   # light orange
-    st.error("🟠 Air Quality: Poor")
+    elif value <= 90:
+        set_background("#ffe5b4")
+        st.error("🟠 Air Quality: Poor")
 
-else:
-    set_background("#f8d7da")   # light red
-    st.error("🔴 Air Quality: Severe")
+    else:
+        set_background("#f8d7da")
+        st.error("🔴 Air Quality: Severe")
 
-    # ✅ Gauge Chart
+    # Gauge Chart
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=value,
