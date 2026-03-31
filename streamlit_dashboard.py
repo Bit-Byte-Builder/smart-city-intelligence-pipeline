@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
+import plotly.graph_objects as go
 
 # Load model
 model = pickle.load(open("models/pollution_model.pkl", "rb"))
@@ -65,19 +66,38 @@ if st.button("Predict"):
     features = features.reindex(columns=feature_columns, fill_value=0)
 
     # Step 5: Predict with error handling
-    try:
-        prediction = model.predict(features)
-        st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
+try:
+    prediction = model.predict(features)
+    st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
 
-    # Add AQI label
-    if prediction[0] <= 30:
+    # ✅ ADD AQI LABEL
+if value <= 30:
         st.success("🟢 Air Quality: Good")
-    elif prediction[0] <= 60:
+    elif value <= 60:
         st.warning("🟡 Air Quality: Moderate")
-    elif prediction[0] <= 90:
-        st.error("🔴 Air Quality: Poor")
+    elif value <= 90:
+        st.error("🟠 Air Quality: Poor")
     else:
-        st.error("Air Quality: Severe")
-        
-    except Exception as e:
-        st.error(f"Error: {str(e)}")
+        st.error("🔴 Air Quality: Severe")
+
+    # ✅ GAUGE CHART
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=value,
+        title={'text': "PM2.5 Level"},
+        gauge={
+            'axis': {'range': [0, 200]},
+            'bar': {'color': "black"},
+            'steps': [
+                {'range': [0, 30], 'color': "green"},
+                {'range': [30, 60], 'color': "yellow"},
+                {'range': [60, 90], 'color': "orange"},
+                {'range': [90, 200], 'color': "red"},
+            ],
+        }
+    ))
+
+    st.plotly_chart(fig)
+
+except Exception as e:
+    st.error(f"Error: {str(e)}")
