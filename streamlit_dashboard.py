@@ -68,5 +68,16 @@ if st.button("Predict"):
     try:
         prediction = model.predict(features)
         st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
+
+    # Add AQI label
+    if prediction[0] <= 30:
+        st.success("🟢 Air Quality: Good")
+    elif prediction[0] <= 60:
+        st.warning("🟡 Air Quality: Moderate")
+    elif prediction[0] <= 90:
+        st.error("🔴 Air Quality: Poor")
+    else:
+        st.error("Air Quality: Severe")
+        
     except Exception as e:
         st.error(f"Error: {str(e)}")
