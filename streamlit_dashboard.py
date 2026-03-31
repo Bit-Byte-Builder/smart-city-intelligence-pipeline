@@ -45,19 +45,32 @@ if st.button("Predict"):
         'wd_S','wd_SSW','wd_SW','wd_WSW','wd_W','wd_WNW','wd_NW','wd_NNW'
     ]
 
-    # Step 3: Add missing columns
+    # Step 3: Add wind direction encoding
+    wd_cols = [
+        'wd_N','wd_NNE','wd_NE','wd_ENE','wd_E','wd_ESE','wd_SE','wd_SSE',
+        'wd_S','wd_SSW','wd_SW','wd_WSW','wd_W','wd_WNW','wd_NW','wd_NNW'
+    ]
+
+    for col in wd_cols:
+        features[col] = 0
+
+    features[f'wd_{wd}'] = 1
+
+    # Step 4: Add missing columns
     for col in wd_features:
         features[col] = 0
 
     # Step 4: Set one direction
     features['wd_NE'] = 1
 
-    # Ensure correct column order (VERY IMPORTANT)
+    # Step 5: Fix column order (VERY IMPORTANT)
     feature_columns = pickle.load(open("models/feature_columns.pkl", "rb"))
     features = features.reindex(columns=feature_columns, fill_value=0)
 
-    # Step 5: Predict
-    prediction = model.predict(features)
-
-    st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
-
+    # Step 6: Add error handling
+    Wrap Prediction:
+    try:
+        prediction = model.predict(features)
+        st.success(f"Predicted PM2.5: {prediction[0]:.2f}")
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
