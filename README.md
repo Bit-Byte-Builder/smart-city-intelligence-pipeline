@@ -94,7 +94,7 @@ smart-city-air-quality/
 This is the main control panel where users enter a city and instantly get live weather + pollution inputs.  
 Think of it like a **pollution control room dashboard**.
 
-![Dashboard]()
+![Dashboard](https://github.com/Bit-Byte-Builder/smart-city-intelligence-pipeline/blob/main/dashboard_main.png)
 
 ---
 
