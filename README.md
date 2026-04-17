@@ -118,7 +118,7 @@ Green = Safe, Red = Dangerous.
 Shows how pollution is changing over time.  
 Helps identify whether things are **improving or getting worse**.
 
-![Trend](YOUR_LINK_4)
+![Trend](https://github.com/Bit-Byte-Builder/smart-city-intelligence-pipeline/blob/main/trend_chart.png)
 ---
 
 ## 🎯 Use Cases
