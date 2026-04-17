@@ -1,6 +1,12 @@
 # 🌆 Smart City Air Quality Prediction System
 
-> 🚦 Think of it as a "weather app for pollution" — but with prediction + real-time insights.
+ 🚦 Think of it as a "weather app for pollution" — but with prediction + real-time insights.
+
+## 🌐 Live Demo
+
+🚀 Try the app here:  
+👉 *https://smart-city-intelligence-pipeline-5ywfzfesmb7rzvqqlmjq4l.streamlit.app/*
+📊 Interactive Dashboard | Real-time AQI + Prediction | Smart City Insights
 
 ---
 
@@ -16,7 +22,7 @@
 
 A system that predicts air pollution levels and combines them with live data to help cities act before pollution becomes dangerous.
 
-🚧 Deployment in progress  
+🚀 Deployed and running live with real-time data integration
 
 ---
 
@@ -74,8 +80,7 @@ More accurate predictions mean better early warnings, helping authorities act be
 ---
 
 ## 📁 Project Structure
-smart-city-air-quality/
-│
+smart-city-intelligence-pipeline/
 ├── data/ # Raw & processed datasets
 ├── notebooks/ # EDA & experimentation
 ├── src/ # Core ML pipeline
@@ -130,11 +135,11 @@ Helps identify whether things are **improving or getting worse**.
 
 ---
 
-## ⚙️ How to Run
+## ⚙️ How to Run Locally
 
 ```bash
-git clone <repo-link>
-cd smart-city-air-quality
+git clone https://github.com/Bit-Byte-Builder/smart-city-intelligence-pipeline.git
+cd smart-city-intelligence-pipeline
 
 pip install -r requirements.txt
 streamlit run app/streamlit_dashboard.py
