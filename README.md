@@ -110,7 +110,7 @@ Like a **weather forecast, but for pollution spikes**.
 A color-coded speedometer-style chart that quickly tells how bad the air is.  
 Green = Safe, Red = Dangerous.
 
-![AQI Gauge](YOUR_LINK_3)
+![AQI Gauge](https://github.com/Bit-Byte-Builder/smart-city-intelligence-pipeline/blob/main/api_guage.png)
 
 ---
 
