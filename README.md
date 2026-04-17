@@ -102,7 +102,7 @@ Think of it like a **pollution control room dashboard**.
 Shows predicted PM2.5 levels before pollution actually rises.  
 Like a **weather forecast, but for pollution spikes**.
 
-![Prediction](YOUR_LINK_2)
+![Prediction](https://github.com/Bit-Byte-Builder/smart-city-intelligence-pipeline/blob/main/prediction_output.png)
 
 ---
 
