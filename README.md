@@ -88,8 +88,37 @@ smart-city-air-quality/
 
 ## 📸 Dashboard Preview
 
-![App Screenshot](your-image-link)
+---
 
+### 🏙️ 1. Smart Dashboard Interface
+This is the main control panel where users enter a city and instantly get live weather + pollution inputs.  
+Think of it like a **pollution control room dashboard**.
+
+![Dashboard]()
+
+---
+
+### 📊 2. Prediction Output
+Shows predicted PM2.5 levels before pollution actually rises.  
+Like a **weather forecast, but for pollution spikes**.
+
+![Prediction](YOUR_LINK_2)
+
+---
+
+### 🎯 3. AQI Gauge Visualization
+A color-coded speedometer-style chart that quickly tells how bad the air is.  
+Green = Safe, Red = Dangerous.
+
+![AQI Gauge](YOUR_LINK_3)
+
+---
+
+### 📈 4. Pollution Trend Analysis
+Shows how pollution is changing over time.  
+Helps identify whether things are **improving or getting worse**.
+
+![Trend](YOUR_LINK_4)
 ---
 
 ## 🎯 Use Cases
