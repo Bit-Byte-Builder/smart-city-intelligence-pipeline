@@ -6,6 +6,7 @@
 
 🚀 Try the app here:  
 👉 *https://smart-city-intelligence-pipeline-5ywfzfesmb7rzvqqlmjq4l.streamlit.app/*
+
 📊 Interactive Dashboard | Real-time AQI + Prediction | Smart City Insights
 
 ---
