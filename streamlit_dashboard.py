@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import pickle
 import requests
+import logging
+import datetime
 import plotly.graph_objects as go
 import plotly.express as px
 
@@ -10,6 +12,14 @@ import plotly.express as px
 # ⚙️ CONFIG
 # -------------------------------
 st.set_page_config(page_title="Smart City Intelligence", layout="wide")
+
+# -------------------------------
+# 📝 LOGGING SETUP
+# -------------------------------
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+)
 
 # -------------------------------
 # 🎨 Background
@@ -32,12 +42,15 @@ def set_background(color):
 def get_lat_lon(city, api_key):
     try:
         url = f"http://api.openweathermap.org/geo/1.0/direct?q={city},IN&limit=1&appid={api_key}"
-        res = requests.get(url)
+        res = requests.get(url, timeout=10)
+        res.raise_for_status()
         data = res.json()
         if len(data) == 0:
+            logging.warning(f"Geolocation returned no results for city: {city}")
             return None, None
         return data[0]["lat"], data[0]["lon"]
-    except:
+    except Exception as e:
+        logging.error(f"Geolocation API failed for city '{city}': {e}")
         return None, None
 
 # -------------------------------
@@ -46,9 +59,10 @@ def get_lat_lon(city, api_key):
 def get_weather_data(lat, lon, api_key):
     try:
         url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={api_key}"
-        res = requests.get(url)
+        res = requests.get(url, timeout=10)
 
         if res.status_code != 200:
+            logging.error(f"Weather API returned status {res.status_code} for lat={lat}, lon={lon}")
             return None
 
         data = res.json()
@@ -63,7 +77,8 @@ def get_weather_data(lat, lon, api_key):
 
         return temp, pres, dewp, wind
 
-    except:
+    except Exception as e:
+        logging.error(f"Weather API failed for lat={lat}, lon={lon}: {e}")
         return None
 
 # -------------------------------
@@ -72,16 +87,33 @@ def get_weather_data(lat, lon, api_key):
 def get_real_pm25(lat, lon, api_key):
     try:
         url = f"http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={api_key}"
-        res = requests.get(url)
+        res = requests.get(url, timeout=10)
+        res.raise_for_status()
         data = res.json()
         return data["list"][0]["components"]["pm2_5"]
-    except:
+    except Exception as e:
+        logging.error(f"Air quality API failed for lat={lat}, lon={lon}: {e}")
         return None
 
 # -------------------------------
-# 🔑 API KEY (MOVE TO SECRETS LATER)
+# 🔑 API KEY — loaded from Streamlit secrets
 # -------------------------------
-API_KEY = "69c503736f8f241f4c6657e16d0695d2"
+# The API key is stored in .streamlit/secrets.toml and is NEVER committed to the repo.
+# .gitignore already excludes .streamlit/secrets.toml.
+#
+# To set up locally, create the file:
+#   .streamlit/secrets.toml
+# with the contents:
+#   OPENWEATHER_API_KEY = "your_api_key_here"
+#
+try:
+    API_KEY = st.secrets["OPENWEATHER_API_KEY"]
+except KeyError:
+    st.error(
+        "🔑 API key not found. Please create `.streamlit/secrets.toml` with:\n\n"
+        "OPENWEATHER_API_KEY = \"your_api_key_here\""
+    )
+    st.stop()
 
 # -------------------------------
 # 🤖 LOAD MODEL
@@ -151,6 +183,23 @@ if st.button("🚀 Predict AQI"):
             st.error("Weather data not available. Cannot predict.")
             st.stop()
 
+        # -------------------------------
+        # ⏱️ REAL-TIME FEATURE ENGINEERING
+        # -------------------------------
+        # Use actual current time instead of hardcoded constants
+        now = datetime.datetime.now()
+        current_hour = now.hour
+        current_month = now.month
+
+        # Compute rolling statistics from user-provided lag values
+        # instead of using a hardcoded constant of 1
+        pm25_values = [lag1, lag2, lag3]
+        rolling_mean = float(np.mean(pm25_values))
+        if len(pm25_values) > 1:
+            rolling_std = float(np.std(pm25_values, ddof=1))
+        else:
+            rolling_std = 0.0
+
         # Feature engineering
         features = pd.DataFrame([{
             "TEMP": temp,
@@ -160,10 +209,10 @@ if st.button("🚀 Predict AQI"):
             "PM2.5_lag1": lag1,
             "PM2.5_lag2": lag2,
             "PM2.5_lag3": lag3,
-            "PM2.5_rolling_mean_24h": lag1,
-            "PM2.5_rolling_std_24h": 1,
-            "hour": 12,
-            "month": 3
+            "PM2.5_rolling_mean_24h": rolling_mean,
+            "PM2.5_rolling_std_24h": rolling_std,
+            "hour": current_hour,
+            "month": current_month
         }])
 
         wd_cols = [
@@ -253,4 +302,5 @@ if st.button("🚀 Predict AQI"):
         st.plotly_chart(fig_gauge, use_container_width=True)
 
     except Exception as e:
+        logging.error(f"Prediction failed: {e}")
         st.error(f"Error: {str(e)}")
