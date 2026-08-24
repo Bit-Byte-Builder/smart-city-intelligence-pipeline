@@ -288,6 +288,7 @@ Weather API          Air Quality API
 ```
 
 ## 📁 Project Structure
+
 ```text
 Smart-City-Intelligence-Pipeline/
 │
