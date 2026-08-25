@@ -382,12 +382,12 @@ pip install -r requirements.txt
 
 The application uses an external weather and air-quality API.
 
-### Do not hard-code API credentials in streamlit_dashboard.py.
+### API credentials must not be hard-coded in streamlit_dashboard.py.
 
 ### Local Development
 
 Create the following file in the project directory:
-.streamlit/secrets.toml
+`.streamlit/secrets.toml`
 
 Add your API key:
 
@@ -487,4 +487,4 @@ The system is intended as a portfolio and analytical prototype rather than an of
 
 ### Sachin Kumar
 
-### 📌 Data Science Enthusiast
+**📌 Data Science Enthusiast**
